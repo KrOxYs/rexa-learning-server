@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
+/** Rexa.ai NLP service   */
+
 @Injectable()
 export class NlpService {
   // Define candidateLabels as a class property
   private candidateLabels = [
+    'hotel recommendation with price range',
     'hotel recommendation with price', // New intent
-    'hotel recommendation',
+    'hotel recommendation without price',
     'destination recommendation',
-    'hotel and destination recommendation',
-    'show hotels and destinations',
+    'hotel and destination recommendation without price',
+    'show hotels and destinations without price',
   ];
 
   /**
@@ -45,11 +48,20 @@ export class NlpService {
       console.log('Intent classification response:', response.data);
 
       if (
-        labels[0] == 'hotel recommendation' &&
+        labels[0] == 'hotel recommendation with price' &&
+        labels[1] == 'hotel recommendation with price range'
+      ) {
+        return (labels[0] = labels[1]);
+      }
+
+      if (
+        labels[0] == 'hotel recommendation without price' &&
         labels[1] == 'hotel recommendation with price'
       ) {
         return (labels[0] = labels[1]);
       }
+
+      console.log('Intent classification labels:', labels);
 
       return labels[0];
     } catch (error) {
@@ -120,9 +132,8 @@ export class NlpService {
       const location = locations.length > 0 ? locations[0] : null;
 
       // Extract price using regex or a similar function
-      const price = this.extractPrice(text);
 
-      return { location, price };
+      return { location };
     } catch (error) {
       console.error('Entity extraction error:', error);
       return { location: null, price: null };

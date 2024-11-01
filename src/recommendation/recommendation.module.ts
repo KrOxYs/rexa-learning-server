@@ -5,9 +5,16 @@ import { RecommendationController } from './recommendation.controller';
 import { HotelModule } from 'src/hotel/hotel.module';
 import { DestinationsModule } from 'src/destinations/destinations.module';
 import { NlpModule } from 'src/nlp/nlp.module';
+import { MethodModule } from 'src/utils/method.module';
 @Module({
   providers: [RecommendationService],
-  imports: [PrismaModule, HotelModule, DestinationsModule, NlpModule],
+  imports: [
+    PrismaModule,
+    HotelModule,
+    DestinationsModule,
+    NlpModule,
+    MethodModule,
+  ],
   exports: [RecommendationService],
   controllers: [RecommendationController],
 })

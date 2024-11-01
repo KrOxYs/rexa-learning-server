@@ -10,5 +10,10 @@ export class DestinationsService {
    * @param location The location to search for, case insensitive.
    * @returns A promise that resolves to an array of Destination objects.
    */
-  async findDestinations(location: string) {}
+  async findDestinations(location: string) {
+    return this.prisma.destinations.findMany({
+      where: { location: { contains: location, mode: 'insensitive' } },
+      take: 6,
+    });
+  }
 }

@@ -12,3 +12,23 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model Hotel {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  address   String
+  rating    Float
+  price     Int
+  image     String
+  latitude  Float
+  longitude Float
+}
+
+model Destinations {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  location  String
+  latitude  Float
+  longitude Float
+  rating    Float
+}

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DestinationsService } from 'src/destinations/destinations.service';
 import { HotelService } from 'src/hotel/hotel.service';
 import { NlpService } from 'src/nlp/nlp.service';
+import { MethodService } from 'src/utils/method.service';
 
 @Injectable()
 export class RecommendationService {
@@ -9,6 +10,7 @@ export class RecommendationService {
     private readonly hotelService: HotelService,
     private readonly nlpService: NlpService,
     private readonly destinationsService: DestinationsService,
+    private readonly methodService: MethodService,
   ) {}
 
   /**
@@ -24,7 +26,9 @@ export class RecommendationService {
    */
   async getRecommendation(text: string) {
     const intent = await this.nlpService.classifyIntent(text);
-    const { location, price } = await this.nlpService.extractEntities(text);
+    const { location } = await this.nlpService.extractEntities(text);
+    const price = this.methodService.extractSinglePrice(text);
+    const priceRange = this.methodService.extractPriceRange(text);
 
     if (!location) {
       return { error: 'Unable to extract a valid location' };
@@ -33,7 +37,8 @@ export class RecommendationService {
     let response = {};
 
     switch (intent) {
-      case 'hotel recommendation':
+      case 'hotel recommendation without price':
+        this;
         response = {
           hotels: await this.hotelService.findHotelsByLocationsAndOrPrice(
             location,
@@ -52,6 +57,17 @@ export class RecommendationService {
           ),
           destinations: [],
           message: `Here are the best hotels in ${location} within your budget range of ${price}.`,
+        };
+        break;
+
+      case 'hotel recommendation with price range':
+        response = {
+          hotels: await this.hotelService.findHotelsByLocationsAndPriceRange(
+            location,
+            priceRange,
+          ),
+          destinations: [],
+          message: `Here are the best hotels in ${location} within your budget range of ${priceRange.minPrice} - ${priceRange.maxPrice}.`,
         };
         break;
 
