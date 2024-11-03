@@ -70,35 +70,6 @@ export class NlpService {
     }
   }
   /**
-   * Extracts a price in Indonesian Rupiah from a text.
-   * The price can be in the format of 1.000, 1.000.000, 1 juta, or 1 ribu.
-   * The method returns the price in the smallest unit (Rupiah) as a number.
-   * If no price is found, the method returns null.
-   * @param text The text to extract the price from.
-   * @returns The extracted price in the smallest unit (Rupiah) as a number, or null if no price is found.
-   */
-  private extractPrice(text: string) {
-    const priceMatch = text.match(/(\d{1,3}(?:\.\d{3})*)/);
-
-    let price = null;
-
-    if (priceMatch) {
-      let priceValue: any = priceMatch[1].replace(/\./g, ''); // Remove dot separators
-      priceValue = parseInt(priceValue, 10);
-
-      const isMillion = /juta/i.test(text);
-      const isThousand = /ribu/i.test(text);
-
-      // Adjust the price value based on "juta" or "ribu"
-      price = isMillion
-        ? priceValue * 1000000
-        : isThousand
-          ? priceValue * 1000
-          : priceValue;
-    }
-    return price;
-  }
-  /**
    * Extracts entities from a given text using the Hugging Face API.
    * Currently only extracts Location (LOC) entities.
    * Also extracts a price in Indonesian Rupiah from the text.
