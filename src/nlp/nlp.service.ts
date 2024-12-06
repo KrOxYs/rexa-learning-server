@@ -7,8 +7,9 @@ import axios from 'axios';
 export class NlpService {
   // Define candidateLabels as a class property
   private candidateLabels = [
-    'hotel recommendation with price range',
-    'hotel recommendation with price', // New intent
+    'hotel recommendation with rating', // New intent for rating
+    'hotel recommendation with price range', // New intent for price range
+    'hotel recommendation with price',
     'hotel recommendation without price',
     'destination recommendation',
     'hotel and destination recommendation without price',
@@ -47,12 +48,12 @@ export class NlpService {
 
       console.log('Intent classification response:', response.data);
 
-      if (
-        labels[0] == 'hotel recommendation with price' &&
-        labels[1] == 'hotel recommendation with price range'
-      ) {
-        return (labels[0] = labels[1]);
-      }
+      // if (
+      //   labels[0] == 'hotel recommendation with price' &&
+      //   labels[1] == 'hotel recommendation with price range'
+      // ) {
+      //   return (labels[0] = labels[1]);
+      // }
 
       if (
         labels[0] == 'hotel recommendation without price' &&

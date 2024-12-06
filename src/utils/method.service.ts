@@ -13,16 +13,16 @@ export class MethodService {
    * @returns The extracted price in the smallest unit (Rupiah) as a number, or null if no price is found.
    */
   extractSinglePrice(text: string) {
-    const priceMatch = text.match(/(\d{1,3}(?:\.\d{3})*)/);
+    const priceMatch = text.match(/(\d{1,3}(?:\.\d{3})*)/); // Match prices like "800.000"
 
     let price = null;
 
     if (priceMatch) {
       let priceValue: any = priceMatch[1].replace(/\./g, ''); // Remove dot separators
-      priceValue = parseInt(priceValue, 10);
+      priceValue = parseInt(priceValue, 10); // Convert to an integer
 
-      const isMillion = /juta/i.test(text);
-      const isThousand = /ribu/i.test(text);
+      const isMillion = /juta/i.test(text); // Check if "juta" (million) is mentioned
+      const isThousand = /ribu/i.test(text); // Check if "ribu" (thousand) is mentioned
 
       // Adjust the price value based on "juta" or "ribu"
       price = isMillion
@@ -31,6 +31,9 @@ export class MethodService {
           ? priceValue * 1000
           : priceValue;
     }
+
+    console.log(`Extracted price: ${price}`);
+
     return price;
   }
 
@@ -44,14 +47,18 @@ export class MethodService {
    */
   extractPriceRange(text: string) {
     console.log('Extracting price range from:', text);
+
+    // Regular expression to match a price range pattern (e.g., "800.000 juta sampai 1.500.000 juta")
     const rangePriceMatch = text.match(
       /(\d{1,3}(?:\.\d{3})*)\s*(juta|ribu)\s*(?:sampai|hingga)\s*(\d{1,3}(?:\.\d{3})*)\s*(juta|ribu)/i,
     );
 
     if (rangePriceMatch) {
+      // Parse the minimum and maximum prices using the matching groups
       let minPrice = this.parsePrice(rangePriceMatch[1], rangePriceMatch[2]);
       let maxPrice = this.parsePrice(rangePriceMatch[3], rangePriceMatch[4]);
 
+      // Ensure the minPrice is less than or equal to maxPrice
       if (minPrice > maxPrice) {
         const temp = minPrice;
         minPrice = maxPrice;

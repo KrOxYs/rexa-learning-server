@@ -36,6 +36,7 @@ export class RecommendationService {
 
     let response = {};
 
+    console.log('Intent:', intent);
     switch (intent) {
       case 'hotel recommendation without price':
         this;
